@@ -1,55 +1,57 @@
-﻿
-// Проблема 1: Использование уязвимого метода для сравнения строк
-string password = "password123";
-string inputPassword = Console.ReadLine();
-if (password == inputPassword) // Строковое сравнение уязвимо к тайминг-атакам
+﻿using System;
+using System.Collections.Generic;
+
+class Program
 {
-    Console.WriteLine("Доступ разрешен");
-}
-else
-{
-    Console.WriteLine("Неверный пароль");
-}
+    static void Main(string[] args)
+    {
+        // Проблема 1: Неправильное приведение типа
+        object obj = "строка";
+        int num = (int)obj; // InvalidCastException
 
-// Проблема 2: Уязвимость SQL-инъекции
-string userInput = Console.ReadLine();
-string query = "SELECT * FROM Users WHERE username = '" + userInput + "'"; // Неподготовленный SQL-запрос
+        // Проблема 2: Деление на ноль
+        int zero = 0;
+        int result = 10 / zero; // DivideByZeroException
 
-// Проблема 3: Неуправляемый тип для пароля
-string apiKey = "API_KEY_12345"; // Строка не удаляется из памяти, что может стать уязвимостью
+        // Проблема 3: Выход за пределы массива
+        int[] numbers = { 1, 2, 3 };
+        int outOfBounds = numbers[5]; // IndexOutOfRangeException
 
-// Проблема 4: Потенциальная утечка информации
-try
-{
-    int result = Divide(10, 0);
-}
-catch (DivideByZeroException ex)
-{
-    Console.WriteLine("Произошла ошибка: " + ex.Message); // Раскрытие детали ошибки пользователю
-}
+        // Проблема 4: NullReferenceException
+        string nullString = null;
+        int length = nullString.Length; // NullReferenceException
 
-// Проблема 5: Неиспользуемая переменная
-int unusedVariable = 10;
+        // Проблема 5: Неправильное использование асинхронного метода без await
+        ExampleAsyncMethod(); // Предупреждение: асинхронный метод вызывается без await
 
-// Проблема 6: Переполнение целого числа
-int maxValue = int.MaxValue;
-int overflow = maxValue + 1; // Приведет к переполнению
+        // Проблема 6: Использование необъявленной переменной
+        Console.WriteLine(undeclaredVariable); // Ошибка компиляции: переменная не объявлена
 
-// Проблема 7: Игнорирование возвращаемого значения
-var collection = GetItems();
-collection.Sort(); // Результат сортировки не сохраняется
+        // Проблема 7: Попытка изменить неизменяемую строку
+        string immutableString = "immutable";
+        immutableString[0] = 'I'; // Ошибка компиляции: строки неизменяемы
 
-// Проблема 8: Несовместимость типа
-object obj = "строка";
-int num = (int)obj; // Приведет к InvalidCastException во время выполнения
-    
+        // Проблема 8: Несоответствие типов в условии
+        int number = 10;
+        if (number = 5) // Ошибка: присваивание вместо сравнения
+        {
+            Console.WriteLine("Ошибка в условии!");
+        }
 
-static int Divide(int a, int b)
-{
-    return a / b;
-}
+        // Проблема 9: Неверная реализация метода
+        int sum = Sum(5, "10"); // Ошибка компиляции: несовместимые типы
+    }
 
-static List<int> GetItems()
-{
-    return new List<int> { 3, 1, 2 };
+    // Асинхронный метод
+    static async void ExampleAsyncMethod()
+    {
+        await Task.Delay(1000);
+        Console.WriteLine("Async method completed.");
+    }
+
+    // Неправильный метод сложения
+    static int Sum(int a, int b)
+    {
+        return a + b; // Ошибка компиляции: переменная b должна быть int, а не string
+    }
 }
